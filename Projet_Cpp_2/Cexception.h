@@ -21,6 +21,6 @@ public:
 	void EXCsetErreur(unsigned int uiErreur);
 
 	//méthodes
-	void EXCafficherErreur();
+	void EXCafficherErreur() throw();
 };
 
