@@ -1,6 +1,4 @@
 #include "Csommet.h"
-#include <stdio.h> 
-#include <stdlib.h>
 
 class Cgraphe{
 

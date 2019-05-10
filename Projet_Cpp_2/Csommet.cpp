@@ -80,15 +80,15 @@ Carc ** Csommet::SOMgetArcsPartant()
 
 Carc * Csommet::SOMgetArcPartant(unsigned int uiDestination)
 {
-	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
-	{
-		if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 		{
-			return ppARCSOMarcsPartant[uiCompt];
+			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
+			{
+				return ppARCSOMarcsPartant[uiCompt];
+			}
 		}
-	}
 
-	//TODO : exception arc non trouvé
+		return 0;
 }
 
 Carc ** Csommet::SOMgetArcsArrivant()
@@ -106,7 +106,7 @@ Carc * Csommet::SOMgetArcArrivant(unsigned int uiDestination)
 		}
 	}
 
-	//TODO : exception arc non trouvé
+	return nullptr;
 }
 
 unsigned int Csommet::SOMgetNbPartants()
@@ -128,76 +128,121 @@ void Csommet::SOMsetNumero(unsigned int uiNumero)
 
 void Csommet::SOMajouterArcPartant(unsigned int uiDestination)
 {
-	ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * (uiSOMnbPartants + 1));
-	ppARCSOMarcsPartant[uiSOMnbPartants] = new Carc(uiDestination);
+	try
+	{
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+		{
+			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination == uiDestination)
+			{
+				throw new Cexception(ERR_AJOUT);
+			}
+		}
+		
+		ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * (uiSOMnbPartants + 1));
+		ppARCSOMarcsPartant[uiSOMnbPartants] = new Carc(uiDestination);
 
-	uiSOMnbPartants++;
-
-	//TODO : exception arc déjà existant
+		uiSOMnbPartants++;
+	}
+	catch (Cexception EXCexception)
+	{
+		EXCexception.EXCafficherErreur();
+	}
 }
 
 void Csommet::SOMsupprimerArcPartant(unsigned int uiDestination)
 {
-	bool fait = false;
-
-	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+	try
 	{
-		if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination == uiDestination)
+		bool fait = false;
+
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 		{
-			delete[] ppARCSOMarcsPartant[uiCompt];
-			fait = true;
+			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination == uiDestination)
+			{
+				delete[] ppARCSOMarcsPartant[uiCompt];
+				fait = true;
+			}
+
+			if (fait == true && uiCompt < uiSOMnbPartants - 1)
+			{
+				ppARCSOMarcsPartant[uiCompt] = ppARCSOMarcsPartant[uiCompt + 1];
+			}
 		}
 
-		if (fait == true && uiCompt < uiSOMnbPartants - 1)
+		uiSOMnbPartants--;
+
+		if (fait == true)
 		{
-			ppARCSOMarcsPartant[uiCompt] = ppARCSOMarcsPartant[uiCompt + 1];
+			ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * uiSOMnbPartants);
+		}
+		else
+		{
+			throw new Cexception(ERR_SUPPRESSION);
 		}
 	}
-
-	uiSOMnbPartants--;
-
-	if (fait == true)
+	catch (Cexception EXCexception)
 	{
-		ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * uiSOMnbPartants);
+		EXCexception.EXCafficherErreur();
 	}
 
-	//TODO : exception arc non trouvé
 }
 
 void Csommet::SOMajouterArcArrivant(unsigned int uiDestination)
 {
-	ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * (uiSOMnbArrivants + 1));
-	ppARCSOMarcsArrivant[uiSOMnbArrivants] = new Carc(uiDestination);
+	try
+	{
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+		{
+			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination == uiDestination)
+			{
+				throw new Cexception(ERR_AJOUT);
+			}
+		}
 
-	uiSOMnbArrivants++;
+		ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * (uiSOMnbArrivants + 1));
+		ppARCSOMarcsArrivant[uiSOMnbArrivants] = new Carc(uiDestination);
 
-	//TODO : exception arc déjà existant
+		uiSOMnbArrivants++;
+	}
+	catch (Cexception EXCexception)
+	{
+		EXCexception.EXCafficherErreur();
+	}
 }
 
 void Csommet::SOMsupprimerArcArrivant(unsigned int uiDestination)
 {
-	bool fait = false;
-
-	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
+	try
 	{
-		if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination == uiDestination)
+		bool fait = false;
+
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 		{
-			delete[] ppARCSOMarcsArrivant[uiCompt];
-			fait = true;
+			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination == uiDestination)
+			{
+				delete[] ppARCSOMarcsArrivant[uiCompt];
+				fait = true;
+			}
+
+			if (fait == true && uiCompt < uiSOMnbArrivants - 1)
+			{
+				ppARCSOMarcsArrivant[uiCompt] = ppARCSOMarcsArrivant[uiCompt + 1];
+			}
 		}
 
-		if (fait == true && uiCompt < uiSOMnbArrivants - 1)
+		uiSOMnbArrivants--;
+
+		if (fait == true)
 		{
-			ppARCSOMarcsArrivant[uiCompt] = ppARCSOMarcsArrivant[uiCompt + 1];
+			ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * uiSOMnbArrivants);
+		}
+		else
+		{
+			throw new Cexception(ERR_SUPPRESSION);
 		}
 	}
-
-	uiSOMnbArrivants--;
-
-	if (fait == true)
+	catch (Cexception EXCexception)
 	{
-		ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * uiSOMnbArrivants);
+		EXCexception.EXCafficherErreur();
 	}
-
-	//TODO : exception arc non trouvé
 }

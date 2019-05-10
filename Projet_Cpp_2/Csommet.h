@@ -1,6 +1,4 @@
 #include "Carc.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 class Csommet
 {

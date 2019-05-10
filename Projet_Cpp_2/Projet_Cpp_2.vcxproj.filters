@@ -4,11 +4,13 @@
     <ClInclude Include="Carc.h" />
     <ClInclude Include="Csommet.h" />
     <ClInclude Include="Cgraphe.h" />
+    <ClInclude Include="Cexception.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Carc.cpp" />
     <ClCompile Include="Csommet.cpp" />
     <ClCompile Include="Cgraphe.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Cexception.cpp" />
   </ItemGroup>
 </Project>
