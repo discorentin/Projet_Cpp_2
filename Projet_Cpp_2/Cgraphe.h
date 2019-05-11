@@ -7,21 +7,19 @@ private:
 	unsigned int uiGRAnbSommets;
 
 public:
-	//Constructeurs & Destructeurs
+	//CONSTRUCTEURS & DESTRUCTEUR
 	Cgraphe();
 	Cgraphe(Cgraphe & GRAparam);
 	Cgraphe(unsigned int uiNbSommets);
 
 	~Cgraphe();
 
-	//getter & setter
+	//GETTER
 	Csommet ** GRAgetSommets();
 	Csommet * GRAgetSommet(unsigned int uiNumero);
 	unsigned int GRAgetNbSommets();
 
-	void GRAsetNbSommets(unsigned int uiNbSommets);
-
-	//méthodes
+	//METHODES
 	void GRAajouterSommet(unsigned int uiNumero);
 	void GRAsupprimerSommet(unsigned int uiNumero);
 	void GRAajouterArc(unsigned int uiDepart, unsigned int uiDestination);

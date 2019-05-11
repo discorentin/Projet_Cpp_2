@@ -1,10 +1,10 @@
 #include "Cgraphe.h"
 
-//Constructeurs & Destructeurs
+//CONSTRUCTEURS & DESTRUCTEUR
 
 Cgraphe::Cgraphe()
 {
-	ppSOMGRAsommets = nullptr;
+	ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *));
 	uiGRAnbSommets = 0;
 }
 
@@ -22,29 +22,41 @@ Cgraphe::Cgraphe(Cgraphe & GRAparam)
 
 Cgraphe::Cgraphe(unsigned int uiNbSommets)
 {
-	ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *) * uiNbSommets);
-
-	for (unsigned int uiCompt = 1; uiCompt <= uiNbSommets; uiCompt++)
+	try
 	{
-		ppSOMGRAsommets[uiCompt] = new Csommet(uiCompt); //les numéros des sommets sont attribués automatiquement
-	}
+		ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *));
 
-	uiGRAnbSommets = uiNbSommets;
+		uiGRAnbSommets = 0;
+
+		for (unsigned int uiCompt = 0; uiCompt < uiNbSommets; uiCompt++)
+		{
+			GRAajouterSommet(uiCompt + 1); //les numéros des sommets sont attribués automatiquement
+		}
+
+		if (uiGRAnbSommets != uiNbSommets)
+		{
+			throw new Cexception(ERR_CONSTRUCTEUR);
+		}
+	}
+	catch (Cexception EXCexception)
+	{
+		EXCexception.EXCafficherErreur();
+	}
 }
 
 Cgraphe::~Cgraphe()
 {
 	for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
 	{
-		delete[] ppSOMGRAsommets[uiCompt];
+		delete(ppSOMGRAsommets[uiCompt]);
 	}
 
-	delete[] ppSOMGRAsommets;
+	delete(ppSOMGRAsommets);
 
 	//uiGRAnbSommets = 0; //inutile
 }
 
-//getter & setter
+//GETTER
 
 Csommet ** Cgraphe::GRAgetSommets()
 {
@@ -61,7 +73,7 @@ Csommet * Cgraphe::GRAgetSommet(unsigned int uiNumero)
 		}
 	}
 
-	return 0;
+	return nullptr;
 }
 
 unsigned int Cgraphe::GRAgetNbSommets()
@@ -69,23 +81,15 @@ unsigned int Cgraphe::GRAgetNbSommets()
 	return uiGRAnbSommets;
 }
 
-void Cgraphe::GRAsetNbSommets(unsigned int uiNbSommets)
-{
-	uiGRAnbSommets = uiNbSommets;
-}
-
-//méthodes
+//METHODES
 
 void Cgraphe::GRAajouterSommet(unsigned int uiNumero)
 {
 	try
 	{
-		for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
+		if (GRAgetSommet(uiNumero) != nullptr)
 		{
-			if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiNumero)
-			{
-				throw new Cexception(ERR_AJOUT);
-			}
+			throw new Cexception(ERR_AJOUT);
 		}
 
 		ppSOMGRAsommets = (Csommet**)realloc(ppSOMGRAsommets, sizeof(Csommet*) * (uiGRAnbSommets + 1));
@@ -125,18 +129,18 @@ void Cgraphe::GRAsupprimerSommet(unsigned int uiNumero)
 					GRAgetSommet(ppARCarcsPartant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcArrivant(uiNumero);
 				}
 
-				for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbPartants; uiComptSom1++)
+				for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbArrivants; uiComptSom1++)
 				{
 					GRAgetSommet(ppARCarcsArrivant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcPartant(uiNumero);
 				}
 
 				//suppression du sommet
-				delete[] ppSOMGRAsommets[uiComptSom0];
+				delete(ppSOMGRAsommets[uiComptSom0]);
 
 				fait = true;
 			}
 
-			if (fait == true && uiComptSom0 < uiGRAnbSommets - 1)
+			if ((fait == true) && (uiComptSom0 < uiGRAnbSommets - 1))
 			{
 				ppSOMGRAsommets[uiComptSom0] = ppSOMGRAsommets[uiComptSom0 + 1];
 			}
@@ -168,13 +172,12 @@ void Cgraphe::GRAajouterArc(unsigned int uiDepart, unsigned int uiDestination)
 			ppSOMGRAsommets[uiCompt]->SOMajouterArcPartant(uiDestination);
 		}
 
+
 		if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDestination)
 		{
-			ppSOMGRAsommets[uiCompt]->SOMajouterArcArrivant(uiDestination);
+			ppSOMGRAsommets[uiCompt]->SOMajouterArcArrivant(uiDepart);
 		}
 	}
-
-	//TODO : exception arc déjà existant
 }
 
 void Cgraphe::GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination)
@@ -194,12 +197,12 @@ void Cgraphe::GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination)
 
 			if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDestination)
 			{
-				ppSOMGRAsommets[uiCompt]->SOMsupprimerArcArrivant(uiDestination);
-				faitPartant = true;
+				ppSOMGRAsommets[uiCompt]->SOMsupprimerArcArrivant(uiDepart);
+				faitArrivant = true;
 			}
 		}
 
-		if (faitPartant == false || faitArrivant == false)
+		if ((faitPartant == false) || (faitArrivant == false))
 		{
 			throw new Cexception(ERR_SUPPRESSION);
 		}
@@ -212,6 +215,35 @@ void Cgraphe::GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination)
 
 void Cgraphe::GRAafficherGraphe()
 {
+	unsigned int uiNbArcs = 0;
+
+	for (unsigned int uiComptSom = 0; uiComptSom < uiGRAnbSommets; uiComptSom++)
+	{
+		for (unsigned int uiComptArc = 0; uiComptArc < ppSOMGRAsommets[uiComptSom]->SOMgetNbPartants(); uiComptArc++)
+		{
+			uiNbArcs++;
+		}
+	}
+
+	printf("Graphe :\n	Nombre de sommets : %d\n	Nombre d'arcs : %d\n\n	Sommets :\n", uiGRAnbSommets, uiNbArcs);
+
+	for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
+	{
+		printf("		%d\n", ppSOMGRAsommets[uiCompt]->SOMgetNumero());
+	}
+
+	printf("\n	Arcs :\n");
+
+	for (unsigned int uiComptSom = 0; uiComptSom < uiGRAnbSommets; uiComptSom++)
+	{
+		for (unsigned int uiComptArc = 0; uiComptArc < ppSOMGRAsommets[uiComptSom]->SOMgetNbPartants(); uiComptArc++)
+		{
+			printf("		%d -> %d\n", ppSOMGRAsommets[uiComptSom]->SOMgetNumero(),
+				ppSOMGRAsommets[uiComptSom]->SOMgetArcsPartant()[uiComptArc]->ARCgetDestination());
+		}
+	}
+
+	printf("\n");
 }
 
 void Cgraphe::GRAinverserGraphe()

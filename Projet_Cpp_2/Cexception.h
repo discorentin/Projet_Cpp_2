@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define ERR_AJOUT 1
-#define ERR_SUPPRESSION 2
+#define ERR_CONSTRUCTEUR 1
+#define ERR_AJOUT 2
+#define ERR_SUPPRESSION 3
 
 class Cexception
 {

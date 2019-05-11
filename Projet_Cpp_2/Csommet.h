@@ -13,14 +13,14 @@ private:
 	unsigned int uiSOMnbArrivants;
 
 public:
-	//Constructeurs & Destructeurs
+	//cCONSTRUCTEURS & DESTRUCTEUR
 	//Csommet(); //inutile
 	Csommet(Csommet & SOMparam);
 	Csommet(unsigned int uiNumero);
 
 	~Csommet();
 
-	//getter & setter
+	//GETTER
 	unsigned int SOMgetNumero();
 	Carc ** SOMgetArcsPartant();
 	Carc * SOMgetArcPartant(unsigned int uiDestination);
@@ -29,9 +29,7 @@ public:
 	unsigned int SOMgetNbPartants();
 	unsigned int SOMgetNbArrivants();
 
-	void SOMsetNumero(unsigned int uiNumero);
-
-	//méthodes
+	//METHODES
 	void SOMajouterArcPartant(unsigned int uiDestination);
 	void SOMsupprimerArcPartant(unsigned int uiDestination);
 	void SOMajouterArcArrivant(unsigned int uiDestination);

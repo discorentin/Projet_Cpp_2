@@ -1,6 +1,6 @@
 #include "Csommet.h"
 
-//Constructeurs & Destructeurs
+//CONSTRUCTEURS & DESTRUCTEUR
 
 /*
 Csommet::Csommet()
@@ -17,22 +17,18 @@ Csommet::Csommet(Csommet & SOMparam)
 {
 	uiSOMnumero = SOMparam.SOMgetNumero();
 
-	ppARCSOMarcsPartant = (Carc**)malloc(sizeof(Carc *) * SOMparam.SOMgetNbPartants());
-	
 	for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbPartants(); uiCompt++)
 	{
-		ppARCSOMarcsPartant[uiCompt] = new Carc(SOMparam.SOMgetArcsPartant[uiCompt]);
+		SOMajouterArcPartant(SOMparam.SOMgetArcsPartant()[uiCompt]->ARCgetDestination());
 	}
-
-	ppARCSOMarcsArrivant = (Carc**)malloc(sizeof(Carc *) * SOMparam.SOMgetNbArrivants());
 
 	for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbArrivants(); uiCompt++)
 	{
-		ppARCSOMarcsArrivant[uiCompt] = new Carc(SOMparam.SOMgetArcsArrivant[uiCompt]);
+		SOMajouterArcArrivant(SOMparam.SOMgetArcsArrivant()[uiCompt]->ARCgetDestination());
 	}
 
-	uiSOMnbPartants = SOMparam.SOMgetNbPartants;
-	uiSOMnbArrivants = SOMparam.SOMgetNbArrivants;
+	uiSOMnbPartants = SOMparam.SOMgetNbPartants();
+	uiSOMnbArrivants = SOMparam.SOMgetNbArrivants();
 }
 
 Csommet::Csommet(unsigned int uiNumero)
@@ -40,8 +36,8 @@ Csommet::Csommet(unsigned int uiNumero)
 	uiSOMnumero = uiNumero;
 	uiSOMnbPartants = 0;
 	uiSOMnbArrivants = 0;
-	ppARCSOMarcsPartant = nullptr;
-	ppARCSOMarcsArrivant = nullptr;
+	ppARCSOMarcsPartant = (Carc **)malloc(sizeof(Carc *));
+	ppARCSOMarcsArrivant = (Carc **)malloc(sizeof(Carc *));
 }
 
 Csommet::~Csommet()
@@ -50,23 +46,23 @@ Csommet::~Csommet()
 
 	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 	{
-		delete[] ppARCSOMarcsPartant[uiCompt];
+		delete(ppARCSOMarcsPartant[uiCompt]);
 	}
 
-	delete[] ppARCSOMarcsPartant;
+	delete(ppARCSOMarcsPartant);
 
 	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 	{
-		delete[] ppARCSOMarcsArrivant[uiCompt];
+		delete(ppARCSOMarcsArrivant[uiCompt]);
 	}
 
-	delete[] ppARCSOMarcsArrivant;
+	delete(ppARCSOMarcsArrivant);
 
 	//uiSOMnbPartants = 0; //inutile
 	//uiSOMnbArrivants = 0; //inutile
 }
 
-//getter & setter
+//GETTER
 
 unsigned int Csommet::SOMgetNumero()
 {
@@ -88,7 +84,7 @@ Carc * Csommet::SOMgetArcPartant(unsigned int uiDestination)
 			}
 		}
 
-		return 0;
+		return nullptr;
 }
 
 Carc ** Csommet::SOMgetArcsArrivant()
@@ -119,12 +115,7 @@ unsigned int Csommet::SOMgetNbArrivants()
 	return uiSOMnbArrivants;
 }
 
-void Csommet::SOMsetNumero(unsigned int uiNumero)
-{
-	uiSOMnumero = uiNumero;
-}
-
-//méthodes
+//METHODES
 
 void Csommet::SOMajouterArcPartant(unsigned int uiDestination)
 {
@@ -132,7 +123,7 @@ void Csommet::SOMajouterArcPartant(unsigned int uiDestination)
 	{
 		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 		{
-			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination == uiDestination)
+			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
 			{
 				throw new Cexception(ERR_AJOUT);
 			}
@@ -157,13 +148,13 @@ void Csommet::SOMsupprimerArcPartant(unsigned int uiDestination)
 
 		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 		{
-			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination == uiDestination)
+			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
 			{
-				delete[] ppARCSOMarcsPartant[uiCompt];
+				delete(ppARCSOMarcsPartant[uiCompt]);
 				fait = true;
 			}
 
-			if (fait == true && uiCompt < uiSOMnbPartants - 1)
+			if ((fait == true) && (uiCompt < (uiSOMnbPartants - 1)))
 			{
 				ppARCSOMarcsPartant[uiCompt] = ppARCSOMarcsPartant[uiCompt + 1];
 			}
@@ -191,9 +182,9 @@ void Csommet::SOMajouterArcArrivant(unsigned int uiDestination)
 {
 	try
 	{
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 		{
-			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination == uiDestination)
+			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
 			{
 				throw new Cexception(ERR_AJOUT);
 			}
@@ -218,13 +209,13 @@ void Csommet::SOMsupprimerArcArrivant(unsigned int uiDestination)
 
 		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 		{
-			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination == uiDestination)
+			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
 			{
-				delete[] ppARCSOMarcsArrivant[uiCompt];
+				delete(ppARCSOMarcsArrivant[uiCompt]);
 				fait = true;
 			}
 
-			if (fait == true && uiCompt < uiSOMnbArrivants - 1)
+			if ((fait == true) && (uiCompt < (uiSOMnbArrivants - 1)))
 			{
 				ppARCSOMarcsArrivant[uiCompt] = ppARCSOMarcsArrivant[uiCompt + 1];
 			}

@@ -8,15 +8,13 @@ private:
 	unsigned int uiARCdestination;
 
 public:
-	//Constructeurs & Destructeurs
+	//CONSTRUCTEURS & DESTRUCTEUR
 	//Carc(); //inutile
 	Carc(Carc & ARCparam);
 	Carc(unsigned int uiDestination);
 
 	~Carc();
 
-	//getter & setter
+	//GETTER
 	unsigned int ARCgetDestination();
-
-	void ARCsetDestination(unsigned int uiDestination);
 };

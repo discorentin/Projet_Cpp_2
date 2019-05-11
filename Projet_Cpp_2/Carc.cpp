@@ -1,6 +1,6 @@
 #include "Carc.h"
 
-//Constructeurs & Destructeurs
+//CONSTRUCTEURS & DESTRUCTEUR
 
 /*
 Carc::Carc()
@@ -11,7 +11,7 @@ Carc::Carc()
 
 Carc::Carc(Carc & ARCparam)
 {
-	uiARCdestination = ARCparam.ARCgetDestination;
+	uiARCdestination = ARCparam.ARCgetDestination();
 }
 
 Carc::Carc(unsigned int uiDestination)
@@ -24,14 +24,9 @@ Carc::~Carc()
 	//uiARCdestination = 0; //inutile
 }
 
-//getter & setter
+//GETTER
 
 unsigned int Carc::ARCgetDestination()
 {
 	return uiARCdestination;
-}
-
-void Carc::ARCsetDestination(unsigned int uiDestination)
-{
-	uiARCdestination = uiDestination;
 }
