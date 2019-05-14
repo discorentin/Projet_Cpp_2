@@ -249,3 +249,19 @@ void Cgraphe::GRAafficherGraphe()
 void Cgraphe::GRAinverserGraphe()
 {
 }
+
+//SURCHARGE D'OPERATEUR
+
+Cgraphe & Cgraphe::operator=(Cgraphe & GRAparam)
+{
+	ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *) * GRAparam.GRAgetNbSommets());
+
+	for (unsigned int uiCompt = 0; uiCompt < GRAparam.GRAgetNbSommets(); uiCompt++)
+	{
+		ppSOMGRAsommets[uiCompt] = new Csommet(*GRAparam.GRAgetSommets()[uiCompt]);
+	}
+
+	uiGRAnbSommets = GRAparam.GRAgetNbSommets();
+
+	return * this;
+}

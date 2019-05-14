@@ -1,11 +1,11 @@
 #include "Cgraphe.h"
+#include "Cparseur.h"
 
-#include <stdio.h> 
-#include <stdlib.h>
 #include <iostream>
 
 int main()
 {
+	/*
 	Cgraphe * test = new Cgraphe(3);
 
 	test->GRAajouterArc(1, 2);
@@ -21,6 +21,17 @@ int main()
 	test->GRAsupprimerSommet(3);
 
 	test->GRAafficherGraphe();
+
+	Cgraphe * testCopie = new Cgraphe();
+
+	testCopie = test;
+
+	testCopie->GRAafficherGraphe();
+	//*/
+
+	Cparseur * PARdata = new Cparseur("testParseur.txt");
+
+	printf(PARdata->PARgetAttribut(0));
 
 	return 0;
 }

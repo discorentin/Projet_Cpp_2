@@ -1,6 +1,10 @@
+#ifndef Carc_H
+#define Carc_H 0
+
 #include <stdio.h> 
 #include <stdlib.h>
 #include "Cexception.h"
+
 class Carc
 {
 
@@ -18,3 +22,5 @@ public:
 	//GETTER
 	unsigned int ARCgetDestination();
 };
+
+#endif

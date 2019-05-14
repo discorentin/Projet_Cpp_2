@@ -1,3 +1,6 @@
+#ifndef Csommet_H
+#define Csommet_H 0
+
 #include "Carc.h"
 
 class Csommet
@@ -35,3 +38,5 @@ public:
 	void SOMajouterArcArrivant(unsigned int uiDestination);
 	void SOMsupprimerArcArrivant(unsigned int uiDestination);
 };
+
+#endif

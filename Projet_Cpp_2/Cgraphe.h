@@ -1,3 +1,6 @@
+#ifndef Cgraphe_H
+#define Cgraphe_H 0
+
 #include "Csommet.h"
 
 class Cgraphe{
@@ -26,4 +29,9 @@ public:
 	void GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination);
 	void GRAafficherGraphe();
 	void GRAinverserGraphe();
+
+	//SURCHARGE D'OPERATEUR
+	Cgraphe & operator=(Cgraphe & GRAparam);
 };
+
+#endif
