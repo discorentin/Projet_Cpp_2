@@ -27,5 +27,6 @@ void Cexception::EXCafficherErreur()
 	case ERR_AJOUT: fprintf(stderr, "erreur : l'objet que vous essayez de créer existe déjà.\n"); break;
 	case ERR_SUPPRESSION: fprintf(stderr, "erreur : l'objet que vous essayez de supprimer n'existe pas.\n"); break;
 	case ERR_LECTURE: fprintf(stderr, "erreur : la lecture du fichier n'a pas fonctionné.\n"); break;
+	case ERR_FORMAT:fprintf(stderr, "erreur : le format du fichier que vous essayez de charger n'est pas conforme.\n"); break;
 	}
 }

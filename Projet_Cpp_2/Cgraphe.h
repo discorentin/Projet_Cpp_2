@@ -14,6 +14,7 @@ public:
 	Cgraphe();
 	Cgraphe(Cgraphe & GRAparam);
 	Cgraphe(unsigned int uiNbSommets);
+	Cgraphe(char * pcFichier);
 
 	~Cgraphe();
 

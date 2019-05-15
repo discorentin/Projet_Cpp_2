@@ -6,6 +6,7 @@
     <ClInclude Include="Cgraphe.h" />
     <ClInclude Include="Cexception.h" />
     <ClInclude Include="Cparseur.h" />
+    <ClInclude Include="CparseurGraphe.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Carc.cpp" />
@@ -14,5 +15,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Cexception.cpp" />
     <ClCompile Include="Cparseur.cpp" />
+    <ClCompile Include="CparseurGraphe.cpp" />
   </ItemGroup>
 </Project>

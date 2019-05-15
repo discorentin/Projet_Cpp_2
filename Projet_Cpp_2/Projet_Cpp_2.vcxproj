@@ -15,6 +15,7 @@
     <ClInclude Include="Cexception.h" />
     <ClInclude Include="Cgraphe.h" />
     <ClInclude Include="Cparseur.h" />
+    <ClInclude Include="CparseurGraphe.h" />
     <ClInclude Include="Csommet.h" />
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +23,7 @@
     <ClCompile Include="Cexception.cpp" />
     <ClCompile Include="Cgraphe.cpp" />
     <ClCompile Include="Cparseur.cpp" />
+    <ClCompile Include="CparseurGraphe.cpp" />
     <ClCompile Include="Csommet.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>

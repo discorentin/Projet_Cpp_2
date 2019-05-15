@@ -9,6 +9,7 @@
 #define ERR_AJOUT 2
 #define ERR_SUPPRESSION 3
 #define ERR_LECTURE 4
+#define ERR_FORMAT 5
 
 class Cexception
 {

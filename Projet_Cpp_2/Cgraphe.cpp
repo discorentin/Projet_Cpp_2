@@ -1,4 +1,5 @@
 #include "Cgraphe.h"
+#include "CparseurGraphe.h"
 
 //CONSTRUCTEURS & DESTRUCTEUR
 
@@ -42,6 +43,13 @@ Cgraphe::Cgraphe(unsigned int uiNbSommets)
 	{
 		EXCexception.EXCafficherErreur();
 	}
+}
+
+Cgraphe::Cgraphe(char * pcFichier)
+{
+	CparseurGraphe PGRparseur(pcFichier);
+
+	* this = PGRparseur.PGRgetGraphe();
 }
 
 Cgraphe::~Cgraphe()
@@ -254,14 +262,29 @@ void Cgraphe::GRAinverserGraphe()
 
 Cgraphe & Cgraphe::operator=(Cgraphe & GRAparam)
 {
-	ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *) * GRAparam.GRAgetNbSommets());
-
-	for (unsigned int uiCompt = 0; uiCompt < GRAparam.GRAgetNbSommets(); uiCompt++)
+	try
 	{
-		ppSOMGRAsommets[uiCompt] = new Csommet(*GRAparam.GRAgetSommets()[uiCompt]);
+		uiGRAnbSommets = 0;
+		ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *) * GRAparam.GRAgetNbSommets());
+
+		for (unsigned int uiCompt = 0; uiCompt < GRAparam.GRAgetNbSommets(); uiCompt++)
+		{
+			ppSOMGRAsommets[uiCompt] = new Csommet(*GRAparam.GRAgetSommets()[uiCompt]);
+			uiGRAnbSommets++;
+		}
+
+		if (uiGRAnbSommets == GRAparam.GRAgetNbSommets())
+		{
+			return * this;
+		}
+		else
+		{
+			throw new Cexception(ERR_CONSTRUCTEUR);
+		}		
 	}
-
-	uiGRAnbSommets = GRAparam.GRAgetNbSommets();
-
-	return * this;
+	catch(Cexception EXCexception)
+	{
+		EXCexception.EXCafficherErreur();
+		return * this;
+	}
 }

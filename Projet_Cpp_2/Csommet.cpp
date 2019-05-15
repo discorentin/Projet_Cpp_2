@@ -15,20 +15,34 @@ Csommet::Csommet()
 
 Csommet::Csommet(Csommet & SOMparam)
 {
-	uiSOMnumero = SOMparam.SOMgetNumero();
-
-	for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbPartants(); uiCompt++)
+	try
 	{
-		SOMajouterArcPartant(SOMparam.SOMgetArcsPartant()[uiCompt]->ARCgetDestination());
-	}
+		uiSOMnumero = SOMparam.SOMgetNumero();
+		uiSOMnbPartants = 0;
+		uiSOMnbArrivants = 0;
 
-	for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbArrivants(); uiCompt++)
+		ppARCSOMarcsPartant = (Carc **)malloc(sizeof(Carc *));
+		ppARCSOMarcsArrivant = (Carc **)malloc(sizeof(Carc *));
+
+		for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbPartants(); uiCompt++)
+		{
+			SOMajouterArcPartant(SOMparam.SOMgetArcsPartant()[uiCompt]->ARCgetDestination());
+		}
+
+		for (unsigned int uiCompt = 0; uiCompt < SOMparam.SOMgetNbArrivants(); uiCompt++)
+		{
+			SOMajouterArcArrivant(SOMparam.SOMgetArcsArrivant()[uiCompt]->ARCgetDestination());
+		}
+
+		if (uiSOMnbPartants != SOMparam.SOMgetNbPartants() || uiSOMnbArrivants != SOMparam.SOMgetNbArrivants())
+		{
+			throw new Cexception(ERR_CONSTRUCTEUR);
+		}
+	}
+	catch (Cexception EXCexception)
 	{
-		SOMajouterArcArrivant(SOMparam.SOMgetArcsArrivant()[uiCompt]->ARCgetDestination());
+		EXCexception.EXCafficherErreur();
 	}
-
-	uiSOMnbPartants = SOMparam.SOMgetNbPartants();
-	uiSOMnbArrivants = SOMparam.SOMgetNbArrivants();
 }
 
 Csommet::Csommet(unsigned int uiNumero)
@@ -125,14 +139,14 @@ void Csommet::SOMajouterArcPartant(unsigned int uiDestination)
 		{
 			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
 			{
-				throw new Cexception(ERR_AJOUT);
+				return;
 			}
 		}
 		
 		ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * (uiSOMnbPartants + 1));
 		ppARCSOMarcsPartant[uiSOMnbPartants] = new Carc(uiDestination);
 
-		uiSOMnbPartants++;
+		uiSOMnbPartants ++;
 	}
 	catch (Cexception EXCexception)
 	{
@@ -168,7 +182,7 @@ void Csommet::SOMsupprimerArcPartant(unsigned int uiDestination)
 		}
 		else
 		{
-			throw new Cexception(ERR_SUPPRESSION);
+			return;
 		}
 	}
 	catch (Cexception EXCexception)

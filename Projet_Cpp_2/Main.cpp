@@ -29,9 +29,24 @@ int main()
 	testCopie->GRAafficherGraphe();
 	//*/
 
+	/*
 	Cparseur * PARdata = new Cparseur("testParseur.txt");
 
-	printf(PARdata->PARgetAttribut(0));
+	printf("%s = %s\n", PARdata->PARgetAttribut(0), PARdata->PARgetValeur(0)[0]);
+	printf("%s = %s\n", PARdata->PARgetAttribut(1), PARdata->PARgetValeur(1)[0]);
+	printf("%s =\n", PARdata->PARgetAttribut(2));
+	printf("%s\n", PARdata->PARgetValeur(2)[0]);
+	printf("%s\n", PARdata->PARgetValeur(2)[1]);
+	printf("%s\n", PARdata->PARgetValeur(2)[2]);
+	printf("%s =\n", PARdata->PARgetAttribut(3));
+	printf("%s\n", PARdata->PARgetValeur(3)[0]);
+	printf("%s\n", PARdata->PARgetValeur(3)[1]);
+	printf("%s\n", PARdata->PARgetValeur(3)[2]);
+	//*/
+
+	Cgraphe * grapheTest = new Cgraphe("testParseur.txt");
+
+	grapheTest->GRAafficherGraphe();
 
 	return 0;
 }

@@ -13,10 +13,11 @@ using namespace std;
 
 class Cparseur
 {
+
 private:
-	ifstream * poPARfichier;
 	char ** pcPARattributs;
 	char ** ppcPARvaleurs[SIZEMAX];
+	unsigned int uiPARnbAttributs;
 	unsigned int uiPARnbValeurs;
 
 public:
@@ -28,6 +29,8 @@ public:
 	//GETTERS
 	char * PARgetAttribut(unsigned int uiInstance);
 	char ** PARgetValeur(unsigned int uiInstance);
+	unsigned int PARgetNbAttributs();
+	unsigned int PARgetNbValeurs();
 };
 
 #endif

@@ -7,13 +7,14 @@ Cparseur::Cparseur(char * pcFichier)
 	try
 	{
 		unsigned int uiCompt;
-		unsigned int uiComptAttributs = 0;
 		unsigned int uiComptValeursInternes = 0;
 		char cBuffer[SIZEMAX];
 		bool bEstValeur = false;
 		bool bEstDansTableau = false;
 
+		uiPARnbAttributs = 0;
 		uiPARnbValeurs = 0;
+
 		pcPARattributs = (char **)malloc(sizeof(char *));
 
 		for (uiCompt = 0; uiCompt < SIZEMAX; uiCompt++)
@@ -21,36 +22,34 @@ Cparseur::Cparseur(char * pcFichier)
 			ppcPARvaleurs[uiCompt] = (char**)malloc(sizeof(char*));
 		}
 
-		poPARfichier = new ifstream(pcFichier);
+		ifstream oPARfichier(pcFichier);
 		
-		while (!(poPARfichier->eof()))
+		while (!(oPARfichier.eof()))
 		{
 			if (bEstDansTableau == false)
 			{
 				if (bEstValeur == false)
 				{
-					pcPARattributs = (char **)realloc(pcPARattributs, sizeof(char *) * (uiComptAttributs + 1));
+					//pcPARattributs = (char **)realloc(pcPARattributs, sizeof(char *) * (uiPARnbAttributs + 1));
 
-					if (poPARfichier->get(cBuffer, SIZEMAX, '='))
+					if (oPARfichier.get(cBuffer, SIZEMAX, '='))
 					{
-						pcPARattributs[uiComptAttributs] = cBuffer;
-						uiComptAttributs++;
+						pcPARattributs[uiPARnbAttributs] = (char *)malloc(sizeof(char) * (strlen(cBuffer) + 1));
+						strcpy_s(pcPARattributs[uiPARnbAttributs], (strlen(cBuffer) + 1), cBuffer);
+						uiPARnbAttributs++;
 					}
 					else
 					{
 						throw new Cexception(ERR_LECTURE);
 					}
 
-					if (!(poPARfichier->get(cBuffer, 2)))
-					{
-						throw new Cexception(ERR_LECTURE);
-					}
+					oPARfichier.ignore(1, EOF);
 
 					bEstValeur = true;
 				}
 				else
 				{
-					if (!(poPARfichier->get(cBuffer, SIZEMAX, '\n')))
+					if (!(oPARfichier.get(cBuffer, SIZEMAX, '\n')))
 					{
 						throw new Cexception(ERR_LECTURE);
 					}
@@ -61,27 +60,25 @@ Cparseur::Cparseur(char * pcFichier)
 					}
 					else
 					{
-						ppcPARvaleurs[uiPARnbValeurs][0] = cBuffer;
+						ppcPARvaleurs[uiPARnbValeurs][0] = (char *)malloc(sizeof(char) * (strlen(cBuffer) + 1));
+						strcpy_s(ppcPARvaleurs[uiPARnbValeurs][0], strlen(cBuffer) + 1, cBuffer);
 						uiPARnbValeurs++;
 						bEstValeur = false;
 					}
 
-					if (!(poPARfichier->get(cBuffer, 2)))
-					{
-						throw new Cexception(ERR_LECTURE);
-					}
+					oPARfichier.ignore(1, EOF);
 				}
 			}
 			else
 			{
 				while (cBuffer[0] != ']')
 				{
-					if (poPARfichier->get(cBuffer, SIZEMAX, '\n'))
+					if (oPARfichier.get(cBuffer, SIZEMAX, '\n'))
 					{
 						if (cBuffer[0] != ']')
 						{
-							ppcPARvaleurs[uiPARnbValeurs] = (char **)realloc(ppcPARvaleurs, sizeof(char *) * (uiComptValeursInternes + 1));
-							ppcPARvaleurs[uiPARnbValeurs][uiComptValeursInternes] = cBuffer;
+							ppcPARvaleurs[uiPARnbValeurs][uiComptValeursInternes] = (char *)malloc(sizeof(char) * (strlen(cBuffer) + 1));
+							strcpy_s(ppcPARvaleurs[uiPARnbValeurs][uiComptValeursInternes], strlen(cBuffer) + 1, cBuffer);
 							uiComptValeursInternes++;
 						}
 					}
@@ -90,10 +87,7 @@ Cparseur::Cparseur(char * pcFichier)
 						throw new Cexception(ERR_LECTURE);
 					}
 
-					if (!(poPARfichier->get(cBuffer, 2)))
-					{
-						throw new Cexception(ERR_LECTURE);
-					}
+					oPARfichier.ignore(1, EOF);
 				}
 
 				uiPARnbValeurs++;
@@ -103,7 +97,7 @@ Cparseur::Cparseur(char * pcFichier)
 			}
 		}
 
-		poPARfichier->close();
+		oPARfichier.close();
 	}
 	catch (Cexception EXCexception)
 	{
@@ -115,11 +109,11 @@ Cparseur::~Cparseur()
 {
 	unsigned int uiCompt;
 
-	free(pcPARattributs);
+	//free(pcPARattributs); //fait planter
 
 	for (uiCompt = 0; uiCompt < uiPARnbValeurs; uiCompt++)
 	{
-		free(ppcPARvaleurs[uiCompt]);
+		//free(ppcPARvaleurs[uiCompt]); //fait planter
 	}
 }
 
@@ -133,4 +127,14 @@ char * Cparseur::PARgetAttribut(unsigned int uiInstance)
 char ** Cparseur::PARgetValeur(unsigned int uiInstance)
 {
 	return ppcPARvaleurs[uiInstance];
+}
+
+unsigned int Cparseur::PARgetNbAttributs()
+{
+	return uiPARnbAttributs;
+}
+
+unsigned int Cparseur::PARgetNbValeurs()
+{
+	return uiPARnbValeurs;
 }
