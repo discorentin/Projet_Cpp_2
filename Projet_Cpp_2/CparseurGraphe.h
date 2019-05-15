@@ -14,7 +14,7 @@ private :
 		NBSOMMETS, NBARCS, SOMMETS, ARCS, INVALIDE
 	};
 
-	Cgraphe *GRAgraphe;
+	Cgraphe * pGRAgraphe;
 
 	//METHODES
 	Attribut PGRtraduireAttribut(char * pcAttribut);

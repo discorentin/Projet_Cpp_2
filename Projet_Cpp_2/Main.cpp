@@ -44,7 +44,14 @@ int main()
 	printf("%s\n", PARdata->PARgetValeur(3)[2]);
 	//*/
 
+
 	Cgraphe * grapheTest = new Cgraphe("testParseur.txt");
+
+	grapheTest->GRAafficherGraphe();
+
+	printf("\n---------INVERSION---------\n\n");
+
+	grapheTest->GRAinverserGraphe();
 
 	grapheTest->GRAafficherGraphe();
 

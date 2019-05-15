@@ -256,6 +256,32 @@ void Cgraphe::GRAafficherGraphe()
 
 void Cgraphe::GRAinverserGraphe()
 {
+	unsigned int uiComptSom;
+	unsigned int uiComptArc;
+	Cgraphe * pGRAgrapheTmp = new Cgraphe(* this);
+
+	for (uiComptSom = 0; uiComptSom < pGRAgrapheTmp->GRAgetNbSommets(); uiComptSom++)
+	{
+		for (uiComptArc = 0; uiComptArc < pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetNbPartants(); uiComptArc++)
+		{
+			ppSOMGRAsommets[uiComptSom]->SOMsupprimerArcPartant(pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetArcsPartant()[uiComptArc]->ARCgetDestination());
+		}
+
+		for (uiComptArc = 0; uiComptArc < pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetNbPartants(); uiComptArc++)
+		{
+			ppSOMGRAsommets[uiComptSom]->SOMajouterArcPartant(pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetArcsArrivant()[uiComptArc]->ARCgetDestination());
+		}
+
+		for (uiComptArc = 0; uiComptArc < pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetNbArrivants(); uiComptArc++)
+		{
+			ppSOMGRAsommets[uiComptSom]->SOMsupprimerArcArrivant(pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetArcsArrivant()[uiComptArc]->ARCgetDestination());
+		}
+
+		for (uiComptArc = 0; uiComptArc < pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetNbArrivants(); uiComptArc++)
+		{
+			ppSOMGRAsommets[uiComptSom]->SOMajouterArcArrivant(pGRAgrapheTmp->GRAgetSommets()[uiComptSom]->SOMgetArcsPartant()[uiComptArc]->ARCgetDestination());
+		}
+	}
 }
 
 //SURCHARGE D'OPERATEUR
