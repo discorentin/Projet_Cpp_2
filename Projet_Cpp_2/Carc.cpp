@@ -2,13 +2,6 @@
 
 //CONSTRUCTEURS & DESTRUCTEUR
 
-/*
-Carc::Carc()
-{
-	uiARCdestination = 0;
-}
-*/
-
 Carc::Carc(Carc & ARCparam)
 {
 	uiARCdestination = ARCparam.ARCgetDestination();
@@ -21,7 +14,6 @@ Carc::Carc(unsigned int uiDestination)
 
 Carc::~Carc()
 {
-	//uiARCdestination = 0; //inutile
 }
 
 //GETTER

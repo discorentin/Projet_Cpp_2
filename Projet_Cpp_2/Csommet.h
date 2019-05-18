@@ -10,7 +10,7 @@
 
 /*!
 * \class Csommet
-* \brief classe represantant un sommet
+* \brief Classe represantant un sommet
 *
 * Csommet gere la creation et la destruction d'un sommet, ainsi que
 * l'ajout et la suppression d'arcs arrivant ou partant d'un sommet

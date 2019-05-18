@@ -2,17 +2,6 @@
 
 //CONSTRUCTEURS & DESTRUCTEUR
 
-/*
-Csommet::Csommet()
-{
-	uiSOMnumero = 0;
-	uiSOMnbPartants = 0;
-	uiSOMnbArrivants = 0;
-	ppARCSOMarcsPartant = nullptr;
-	ppARCSOMarcsArrivant = nullptr;
-}
-*/
-
 Csommet::Csommet(Csommet & SOMparam)
 {
 	try
@@ -56,8 +45,6 @@ Csommet::Csommet(unsigned int uiNumero)
 
 Csommet::~Csommet()
 {
-	//uiSOMnumero = 0; //inutile
-
 	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 	{
 		delete(ppARCSOMarcsPartant[uiCompt]);
@@ -71,9 +58,6 @@ Csommet::~Csommet()
 	}
 
 	delete(ppARCSOMarcsArrivant);
-
-	//uiSOMnbPartants = 0; //inutile
-	//uiSOMnbArrivants = 0; //inutile
 }
 
 //GETTER

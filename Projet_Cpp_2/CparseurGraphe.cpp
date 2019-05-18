@@ -11,7 +11,7 @@ CparseurGraphe::CparseurGraphe(char * pcFichier)
 	bool bModifNbSommets = false;
 	bool bModifNbArcs = false;
 
-	pGRAgraphe = new Cgraphe();
+	pGRAPGRgraphe = new Cgraphe();
 
 	for (uiCompt = 0; uiCompt < PARgetNbAttributs(); uiCompt++)
 	{
@@ -64,7 +64,7 @@ CparseurGraphe::~CparseurGraphe()
 
 Cgraphe & CparseurGraphe::PGRgetGraphe()
 {
-	return * pGRAgraphe;
+	return * pGRAPGRgraphe;
 }
 
 //METHODES
@@ -110,7 +110,7 @@ void CparseurGraphe::PGRgenererSommets(char ** ppcSommets, unsigned int uiNbSomm
 			if ((uiEmplacementEgal != std::string::npos) && (sSommet.substr(0, uiEmplacementEgal) == "Numero"))
 			{
 				uiNumero = (unsigned int)(std::stoi(sSommet.substr(uiEmplacementEgal + 1)));
-				pGRAgraphe->GRAajouterSommet(uiNumero);
+				pGRAPGRgraphe->GRAajouterSommet(uiNumero);
 			}
 			else
 			{
@@ -173,7 +173,7 @@ void CparseurGraphe::PGRgenererArcs(char ** ppcArcs, unsigned int uiNbArcs)
 				throw new Cexception(ERR_FORMAT);
 			}
 
-			pGRAgraphe->GRAajouterArc(uiDebut, uiFin);
+			pGRAPGRgraphe->GRAajouterArc(uiDebut, uiFin);
 		}
 	}
 	catch (Cexception EXCexception)

@@ -30,7 +30,6 @@ Cparseur::Cparseur(char * pcFichier)
 			{
 				if (bEstValeur == false)
 				{
-					//pcPARattributs = (char **)realloc(pcPARattributs, sizeof(char *) * (uiPARnbAttributs + 1));
 
 					if (oPARfichier.get(cBuffer, SIZEMAX, '='))
 					{
@@ -107,26 +106,32 @@ Cparseur::Cparseur(char * pcFichier)
 
 Cparseur::~Cparseur()
 {
-	unsigned int uiCompt;
-
-	//free(pcPARattributs); //fait planter
-
-	for (uiCompt = 0; uiCompt < uiPARnbValeurs; uiCompt++)
-	{
-		//free(ppcPARvaleurs[uiCompt]); //fait planter
-	}
 }
 
 //GETTERS
 
 char * Cparseur::PARgetAttribut(unsigned int uiInstance)
 {
-	return pcPARattributs[uiInstance];
+	if (uiInstance < uiPARnbAttributs)
+	{
+		return pcPARattributs[uiInstance];
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 char ** Cparseur::PARgetValeur(unsigned int uiInstance)
 {
-	return ppcPARvaleurs[uiInstance];
+	if (uiInstance < uiPARnbValeurs)
+	{
+		return ppcPARvaleurs[uiInstance];
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 unsigned int Cparseur::PARgetNbAttributs()

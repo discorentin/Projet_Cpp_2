@@ -10,7 +10,7 @@
 
 /*!
 * \class Cgraphe
-* \brief classe represantant un graphe
+* \brief Classe represantant un graphe
 *
 * Cgraphe gere la creation, la destruction, l'affichage et l'inversion d'un graphe,
 * ainsi que l'ajout et la suppression des sommets et arcs d'un graphe

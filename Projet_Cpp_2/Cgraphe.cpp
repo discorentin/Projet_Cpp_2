@@ -120,8 +120,6 @@ bool Cgraphe::GRAsupprimerSommet(unsigned int uiNumero)
 	{
 		if (ppSOMGRAsommets[uiComptSom0]->SOMgetNumero() == uiNumero)
 		{
-			uiGRAnbArcs -= ppSOMGRAsommets[uiComptSom0]->SOMgetNbPartants;
-
 			//sauvegarde des arcs partants du sommet à supprimer
 			Carc** ppARCarcsPartant = ppSOMGRAsommets[uiComptSom0]->SOMgetArcsPartant();
 			unsigned int uiNbPartants = ppSOMGRAsommets[uiComptSom0]->SOMgetNbPartants();
@@ -140,6 +138,7 @@ bool Cgraphe::GRAsupprimerSommet(unsigned int uiNumero)
 			for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbArrivants; uiComptSom1++)
 			{
 				GRAgetSommet(ppARCarcsArrivant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcPartant(uiNumero);
+				uiGRAnbArcs--;
 			}
 
 			//suppression du sommet
@@ -246,7 +245,7 @@ void Cgraphe::GRAafficherGraphe()
 		}
 	}
 
-	printf("Graphe :\n	Nombre de sommets : %d\n	Nombre d'arcs : %d\n\n	Sommets :\n", uiGRAnbSommets, uiNbArcs);
+	printf("Graphe :\n	Nombre de sommets : %d\n	Nombre d'arcs : %d\n\n	Sommets :\n", uiGRAnbSommets, uiGRAnbArcs);
 
 	for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
 	{
@@ -304,6 +303,7 @@ Cgraphe & Cgraphe::operator=(Cgraphe & GRAparam)
 	try
 	{
 		uiGRAnbSommets = 0;
+		uiGRAnbArcs = GRAparam.GRAgetNbArcs();
 		ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *) * GRAparam.GRAgetNbSommets());
 
 		for (unsigned int uiCompt = 0; uiCompt < GRAparam.GRAgetNbSommets(); uiCompt++)

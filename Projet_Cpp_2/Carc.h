@@ -12,7 +12,7 @@
 
 /*!
  * \class Carc
- * \brief classe represantant un arc
+ * \brief Classe represantant un arc
  * 
  * Carc gere la creation et la destruction d'un arc 
  */
