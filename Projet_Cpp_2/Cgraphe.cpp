@@ -7,6 +7,7 @@ Cgraphe::Cgraphe()
 {
 	ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *));
 	uiGRAnbSommets = 0;
+	uiGRAnbArcs = 0;
 }
 
 Cgraphe::Cgraphe(Cgraphe & GRAparam)
@@ -19,15 +20,17 @@ Cgraphe::Cgraphe(Cgraphe & GRAparam)
 	}
 
 	uiGRAnbSommets = GRAparam.GRAgetNbSommets();
+	uiGRAnbArcs = GRAparam.GRAgetNbArcs();
 }
 
 Cgraphe::Cgraphe(unsigned int uiNbSommets)
 {
 	try
 	{
-		ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *));
-
+		uiGRAnbArcs = 0;
 		uiGRAnbSommets = 0;
+
+		ppSOMGRAsommets = (Csommet **)malloc(sizeof(Csommet *));
 
 		for (unsigned int uiCompt = 0; uiCompt < uiNbSommets; uiCompt++)
 		{
@@ -60,8 +63,6 @@ Cgraphe::~Cgraphe()
 	}
 
 	delete(ppSOMGRAsommets);
-
-	//uiGRAnbSommets = 0; //inutile
 }
 
 //GETTER
@@ -89,135 +90,147 @@ unsigned int Cgraphe::GRAgetNbSommets()
 	return uiGRAnbSommets;
 }
 
+unsigned int Cgraphe::GRAgetNbArcs()
+{
+	return uiGRAnbArcs;
+}
+
 //METHODES
 
-void Cgraphe::GRAajouterSommet(unsigned int uiNumero)
+bool Cgraphe::GRAajouterSommet(unsigned int uiNumero)
 {
-	try
+	if (GRAgetSommet(uiNumero) != nullptr)
 	{
-		if (GRAgetSommet(uiNumero) != nullptr)
+		return true;
+	}
+
+	ppSOMGRAsommets = (Csommet**)realloc(ppSOMGRAsommets, sizeof(Csommet*) * (uiGRAnbSommets + 1));
+	ppSOMGRAsommets[uiGRAnbSommets] = new Csommet(uiNumero);
+
+	uiGRAnbSommets++;
+
+	return false;
+}
+
+bool Cgraphe::GRAsupprimerSommet(unsigned int uiNumero)
+{
+	bool fait = false;
+
+	for (unsigned int uiComptSom0 = 0; uiComptSom0 < uiGRAnbSommets; uiComptSom0++)
+	{
+		if (ppSOMGRAsommets[uiComptSom0]->SOMgetNumero() == uiNumero)
 		{
-			throw new Cexception(ERR_AJOUT);
+			uiGRAnbArcs -= ppSOMGRAsommets[uiComptSom0]->SOMgetNbPartants;
+
+			//sauvegarde des arcs partants du sommet à supprimer
+			Carc** ppARCarcsPartant = ppSOMGRAsommets[uiComptSom0]->SOMgetArcsPartant();
+			unsigned int uiNbPartants = ppSOMGRAsommets[uiComptSom0]->SOMgetNbPartants();
+
+			//sauvegarde des arcs arrivant au sommet à supprimer
+			Carc** ppARCarcsArrivant = ppSOMGRAsommets[uiComptSom0]->SOMgetArcsArrivant();
+			unsigned int uiNbArrivants = ppSOMGRAsommets[uiComptSom0]->SOMgetNbArrivants();
+
+			//suppression des arcs dans les sommets connectés au sommet à supprimer
+
+			for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbPartants; uiComptSom1++)
+			{
+				GRAgetSommet(ppARCarcsPartant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcArrivant(uiNumero);
+			}
+
+			for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbArrivants; uiComptSom1++)
+			{
+				GRAgetSommet(ppARCarcsArrivant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcPartant(uiNumero);
+			}
+
+			//suppression du sommet
+			delete(ppSOMGRAsommets[uiComptSom0]);
+
+			fait = true;
 		}
 
-		ppSOMGRAsommets = (Csommet**)realloc(ppSOMGRAsommets, sizeof(Csommet*) * (uiGRAnbSommets + 1));
-		ppSOMGRAsommets[uiGRAnbSommets] = new Csommet(uiNumero);
-
-		uiGRAnbSommets++;
+		if ((fait == true) && (uiComptSom0 < uiGRAnbSommets - 1))
+		{
+			ppSOMGRAsommets[uiComptSom0] = ppSOMGRAsommets[uiComptSom0 + 1];
+		}
 	}
-	catch(Cexception EXCexception)
+
+	uiGRAnbSommets--;
+
+	if (fait == true)
 	{
-		EXCexception.EXCafficherErreur();
+		ppSOMGRAsommets = (Csommet**)realloc(ppSOMGRAsommets, sizeof(Csommet*) * uiGRAnbSommets);
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
 
-void Cgraphe::GRAsupprimerSommet(unsigned int uiNumero)
+bool Cgraphe::GRAajouterArc(unsigned int uiDepart, unsigned int uiDestination)
 {
-	try
-	{
-		bool fait = false;
+	bool bDejaPresentDepart = false;
+	bool bDejaPresentDestination = false;
 
-		for (unsigned int uiComptSom0 = 0; uiComptSom0 < uiGRAnbSommets; uiComptSom0++)
-		{
-			if (ppSOMGRAsommets[uiComptSom0]->SOMgetNumero() == uiNumero)
-			{
-
-				//sauvegarde des arcs partants du sommet à supprimer
-				Carc** ppARCarcsPartant = ppSOMGRAsommets[uiComptSom0]->SOMgetArcsPartant();
-				unsigned int uiNbPartants = ppSOMGRAsommets[uiComptSom0]->SOMgetNbPartants();
-
-				//sauvegarde des arcs arrivant au sommet à supprimer
-				Carc** ppARCarcsArrivant = ppSOMGRAsommets[uiComptSom0]->SOMgetArcsArrivant();
-				unsigned int uiNbArrivants = ppSOMGRAsommets[uiComptSom0]->SOMgetNbArrivants();
-
-				//suppression des arcs dans les sommets connectés au sommet à supprimer
-
-				for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbPartants; uiComptSom1++)
-				{
-					GRAgetSommet(ppARCarcsPartant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcArrivant(uiNumero);
-				}
-
-				for (unsigned int uiComptSom1 = 0; uiComptSom1 < uiNbArrivants; uiComptSom1++)
-				{
-					GRAgetSommet(ppARCarcsArrivant[uiComptSom1]->ARCgetDestination())->SOMsupprimerArcPartant(uiNumero);
-				}
-
-				//suppression du sommet
-				delete(ppSOMGRAsommets[uiComptSom0]);
-
-				fait = true;
-			}
-
-			if ((fait == true) && (uiComptSom0 < uiGRAnbSommets - 1))
-			{
-				ppSOMGRAsommets[uiComptSom0] = ppSOMGRAsommets[uiComptSom0 + 1];
-			}
-		}
-
-		uiGRAnbSommets--;
-
-		if (fait == true)
-		{
-			ppSOMGRAsommets = (Csommet**)realloc(ppSOMGRAsommets, sizeof(Csommet*) * uiGRAnbSommets);
-		}
-		else
-		{
-			throw new Cexception(ERR_SUPPRESSION);
-		}
-	}
-	catch(Cexception EXCexception)
-	{
-		EXCexception.EXCafficherErreur();
-	}
-}
-
-void Cgraphe::GRAajouterArc(unsigned int uiDepart, unsigned int uiDestination)
-{
 	for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
 	{
 		if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDepart)
 		{
-			ppSOMGRAsommets[uiCompt]->SOMajouterArcPartant(uiDestination);
+			if (ppSOMGRAsommets[uiCompt]->SOMajouterArcPartant(uiDestination) == true)
+			{
+				bDejaPresentDepart = true;
+			}
 		}
 
 
 		if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDestination)
 		{
-			ppSOMGRAsommets[uiCompt]->SOMajouterArcArrivant(uiDepart);
+			if (ppSOMGRAsommets[uiCompt]->SOMajouterArcArrivant(uiDepart) == true)
+			{
+				bDejaPresentDestination = true;
+			}
 		}
+	}
+
+	if (bDejaPresentDepart == true && bDejaPresentDestination == true)
+	{
+		return true;
+	}
+	else
+	{
+		uiGRAnbArcs++;
+		return false;
 	}
 }
 
-void Cgraphe::GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination)
+bool Cgraphe::GRAsupprimerArc(unsigned int uiDepart, unsigned int uiDestination)
 {
-	try
+	bool faitPartant = false;
+	bool faitArrivant = false;
+
+	for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
 	{
-		bool faitPartant = false;
-		bool faitArrivant = false;
-
-		for (unsigned int uiCompt = 0; uiCompt < uiGRAnbSommets; uiCompt++)
+		if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDepart)
 		{
-			if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDepart)
-			{
-				ppSOMGRAsommets[uiCompt]->SOMsupprimerArcPartant(uiDestination);
-				faitPartant = true;
-			}
-
-			if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDestination)
-			{
-				ppSOMGRAsommets[uiCompt]->SOMsupprimerArcArrivant(uiDepart);
-				faitArrivant = true;
-			}
+			ppSOMGRAsommets[uiCompt]->SOMsupprimerArcPartant(uiDestination);
+			faitPartant = true;
 		}
 
-		if ((faitPartant == false) || (faitArrivant == false))
+		if (ppSOMGRAsommets[uiCompt]->SOMgetNumero() == uiDestination)
 		{
-			throw new Cexception(ERR_SUPPRESSION);
+			ppSOMGRAsommets[uiCompt]->SOMsupprimerArcArrivant(uiDepart);
+			faitArrivant = true;
 		}
 	}
-	catch (Cexception EXCexception)
+
+	if ((faitPartant == false) || (faitArrivant == false))
 	{
-		EXCexception.EXCafficherErreur();
+		return true;
+	}
+	else
+	{
+		uiGRAnbArcs--;
+		return false;
 	}
 }
 

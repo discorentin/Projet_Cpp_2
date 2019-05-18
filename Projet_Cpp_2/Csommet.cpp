@@ -90,15 +90,15 @@ Carc ** Csommet::SOMgetArcsPartant()
 
 Carc * Csommet::SOMgetArcPartant(unsigned int uiDestination)
 {
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+	{
+		if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
 		{
-			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
-			{
-				return ppARCSOMarcsPartant[uiCompt];
-			}
+			return ppARCSOMarcsPartant[uiCompt];
 		}
+	}
 
-		return nullptr;
+	return nullptr;
 }
 
 Carc ** Csommet::SOMgetArcsArrivant()
@@ -131,123 +131,100 @@ unsigned int Csommet::SOMgetNbArrivants()
 
 //METHODES
 
-void Csommet::SOMajouterArcPartant(unsigned int uiDestination)
+bool Csommet::SOMajouterArcPartant(unsigned int uiDestination)
 {
-	try
+	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 	{
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+		if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
 		{
-			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
-			{
-				return;
-			}
+			return true;
 		}
+	}
 		
-		ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * (uiSOMnbPartants + 1));
-		ppARCSOMarcsPartant[uiSOMnbPartants] = new Carc(uiDestination);
+	ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * (uiSOMnbPartants + 1));
+	ppARCSOMarcsPartant[uiSOMnbPartants] = new Carc(uiDestination);
 
-		uiSOMnbPartants ++;
-	}
-	catch (Cexception EXCexception)
+	uiSOMnbPartants ++;
+
+	return false;
+}
+
+bool Csommet::SOMsupprimerArcPartant(unsigned int uiDestination)
+{
+	bool fait = false;
+
+	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
 	{
-		EXCexception.EXCafficherErreur();
+		if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
+		{
+			delete(ppARCSOMarcsPartant[uiCompt]);
+			fait = true;
+		}
+
+		if ((fait == true) && (uiCompt < (uiSOMnbPartants - 1)))
+		{
+			ppARCSOMarcsPartant[uiCompt] = ppARCSOMarcsPartant[uiCompt + 1];
+		}
+	}
+
+	uiSOMnbPartants--;
+
+	if (fait == true)
+	{
+		ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * uiSOMnbPartants);
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
 
-void Csommet::SOMsupprimerArcPartant(unsigned int uiDestination)
+bool Csommet::SOMajouterArcArrivant(unsigned int uiDestination)
 {
-	try
+	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 	{
-		bool fait = false;
-
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbPartants; uiCompt++)
+		if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
 		{
-			if (ppARCSOMarcsPartant[uiCompt]->ARCgetDestination() == uiDestination)
-			{
-				delete(ppARCSOMarcsPartant[uiCompt]);
-				fait = true;
-			}
-
-			if ((fait == true) && (uiCompt < (uiSOMnbPartants - 1)))
-			{
-				ppARCSOMarcsPartant[uiCompt] = ppARCSOMarcsPartant[uiCompt + 1];
-			}
-		}
-
-		uiSOMnbPartants--;
-
-		if (fait == true)
-		{
-			ppARCSOMarcsPartant = (Carc**)realloc(ppARCSOMarcsPartant, sizeof(Carc*) * uiSOMnbPartants);
-		}
-		else
-		{
-			return;
+			return true;
 		}
 	}
-	catch (Cexception EXCexception)
-	{
-		EXCexception.EXCafficherErreur();
-	}
 
+	ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * (uiSOMnbArrivants + 1));
+	ppARCSOMarcsArrivant[uiSOMnbArrivants] = new Carc(uiDestination);
+
+	uiSOMnbArrivants++;
+
+	return false;
 }
 
-void Csommet::SOMajouterArcArrivant(unsigned int uiDestination)
+bool Csommet::SOMsupprimerArcArrivant(unsigned int uiDestination)
 {
-	try
+	bool fait = false;
+
+	for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
 	{
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
+		if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
 		{
-			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
-			{
-				throw new Cexception(ERR_AJOUT);
-			}
+			delete(ppARCSOMarcsArrivant[uiCompt]);
+			fait = true;
 		}
 
-		ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * (uiSOMnbArrivants + 1));
-		ppARCSOMarcsArrivant[uiSOMnbArrivants] = new Carc(uiDestination);
-
-		uiSOMnbArrivants++;
-	}
-	catch (Cexception EXCexception)
-	{
-		EXCexception.EXCafficherErreur();
-	}
-}
-
-void Csommet::SOMsupprimerArcArrivant(unsigned int uiDestination)
-{
-	try
-	{
-		bool fait = false;
-
-		for (unsigned int uiCompt = 0; uiCompt < uiSOMnbArrivants; uiCompt++)
+		if ((fait == true) && (uiCompt < (uiSOMnbArrivants - 1)))
 		{
-			if (ppARCSOMarcsArrivant[uiCompt]->ARCgetDestination() == uiDestination)
-			{
-				delete(ppARCSOMarcsArrivant[uiCompt]);
-				fait = true;
-			}
-
-			if ((fait == true) && (uiCompt < (uiSOMnbArrivants - 1)))
-			{
-				ppARCSOMarcsArrivant[uiCompt] = ppARCSOMarcsArrivant[uiCompt + 1];
-			}
-		}
-
-		uiSOMnbArrivants--;
-
-		if (fait == true)
-		{
-			ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * uiSOMnbArrivants);
-		}
-		else
-		{
-			throw new Cexception(ERR_SUPPRESSION);
+			ppARCSOMarcsArrivant[uiCompt] = ppARCSOMarcsArrivant[uiCompt + 1];
 		}
 	}
-	catch (Cexception EXCexception)
+
+	uiSOMnbArrivants--;
+
+	if (fait == true)
 	{
-		EXCexception.EXCafficherErreur();
+		ppARCSOMarcsArrivant = (Carc**)realloc(ppARCSOMarcsArrivant, sizeof(Carc*) * uiSOMnbArrivants);
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
